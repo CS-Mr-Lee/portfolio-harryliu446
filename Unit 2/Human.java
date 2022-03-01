@@ -1,35 +1,44 @@
-package ICS4U1;
+package Unit2ObjectOrientedProgramming4Quiz;
 
-class Human {
+/**
+ * Name: Harry Liu
+ * Description: Class for Human
+ * Date: Mar 1, 2022
+ */
+
+
+public class Human {
 
 	// attributes
 	/** The name of the human */
 	private String name;
-	/** the gender of the human */
-	private String gender;
-	/** the weight of the human */
+	/** the weight of the human in kg*/
 	private double weight;
 	/** the energy level of the human */
-	private double energyLevel;
-	/** the height of the human */
-	private double height;
+	private int energyLevel;
 
 	//constructor
 	/**
 	 * Name: Human
-	 * Description: Constructor for the human class
+	 * Description: Default constructor for Human
+	 */
+	public Human () {
+		name = "";
+		weight = -1;
+		energyLevel = -1;
+	}
+	
+	/**
+	 * Name: Human
+	 * Description: Constructor for Human
 	 * @param name - String value for the name of the human
-	 * @param gender - String value for the gender of the human
 	 * @param weight - double value for the weight of the human
 	 * @param energyLevel - double value for the energy level of the human
-	 * @param height - double value for the height of the human
 	 */
-	public Human(String name, String gender, double weight, double energyLevel, double height) {
+	public Human (String name, double weight, int energyLevel) {
 		this.name = name;
-		this.gender = gender;
-		this.weight = Math.max(0, weight);	//weight cannot be negative
-		this.energyLevel = Math.max(0, Math.min(100, energyLevel));	//ensures that energy level is within the range of 0-100
-		this.height = Math.max(0, height);	//height cannot be negative
+		this.weight = weight;	
+		this.energyLevel = energyLevel;
 	}
 
 	
@@ -41,15 +50,6 @@ class Human {
 	 */
 	public String getName() {
 		return name;
-	}
-
-	/**
-	 * Name: getGender
-	 * Description: gets the gender of the human
-	 * @return - returns a String value for the gender of the human
-	 */
-	public String getGender() {
-		return gender;
 	}
 
 	/**
@@ -66,42 +66,11 @@ class Human {
 	 * Description: gets the energy level of the human
 	 * @return - returns a double value for the current energy level of the human
 	 */
-	public double getEnergyLevel() {
+	public int getEnergyLevel() {
 		return energyLevel;
 	}
-
-	/**
-	 * Name: getHeight
-	 * Description: gets the current height of the human
-	 * @return - returns a double value indicating the current height of the human
-	 */
-	public double getHeight() {
-		return height;
-	}
-
-	//mutators
-	/**
-	 * Name: setWeight
-	 * Description: sets the weight of the human object to the new weight as specified in the input
-	 * @param newWeight - double value for the new weight of the human
-	 */
-	public void setWeight(double newWeight) {
-		weight = Math.max(0, newWeight);	//weight cannot be less than 0
-	}
-
-	public void setEnergyLevel (double newEnergyLevel) {
-		energyLevel = Math.max(0, Math.min(100, newEnergyLevel));
-	}
 	
-	/**
-	 * Name: setHeight
-	 * Description: sets the height of the human object to the new height as specified in the input
-	 * @param newHeight - double value for the new height of the human
-	 */
-	public void setHeight(double newHeight) {
-		height = Math.max(height, newHeight);	//height can only get taller
-	}
-
+	//other methods
 	/**
 	 * Name: sleep
 	 * Description: human sleeps to gain energy based on hours slept
@@ -117,16 +86,60 @@ class Human {
 	 * @param km - double value for the distance ran in km
 	 */
 	public void run (double km) {
-		energyLevel = Math.max(0, energyLevel - 0.5*km);	//0.5% energy drop per km
+		energyLevel = (int)Math.max(0, energyLevel - 3*km);	//3% energy drop per km
 		weight = Math.max(0, weight - 0.001*km);		//0.001kg weight drop per km
 	}
 
+	/**
+	 * Name: eat
+	 * Description: human eats vegetable, if successful, gains energy level and weight accordingly
+	 * @param veg - Vegetable value for the vegetable to be eaten
+	 * @param grams - double value for the amount of vegetable eaten
+	 */
+	public void eat (Vegetable veg, double grams) {
+		int caloriesGained = veg.eaten(grams);	//calls eaten function from Vegetable class
+		
+		if (caloriesGained == -1) {		//if mass eaten is greater than the original mass, eating not successful
+			System.out.println("I don’t have that much food");
+			return;
+		}
+		
+		//if successful, gains weight and energy accordingly
+		weight += grams;
+		energyLevel += Math.round(caloriesGained/15.0);
+	}
+	
+	/**
+	 * Name: eat
+	 * Description: human eats cookie, if successful, gains energy level and weight accordingly
+	 * @param food - Cookie value for the cookie to be eaten
+	 * @param grams - double value for the amount of cookie eaten
+	 */
+	public void eat (Cookie food, double grams) {
+		int caloriesGained = food.eaten(grams);	//calls eaten function from Vegetable class
+		
+		if (caloriesGained == -1) {		//if mass eaten is greater than the original mass, eating not successful
+			System.out.println("I don’t have that much food");
+			return;
+		}
+		
+		if (caloriesGained == -2) {		//if cookie is still packaged, eating not successful
+			System.out.println("I can’t eat the bag");
+			return;
+		}
+		
+		//if successful, gains weight and energy accordingly
+		weight += (grams/1000);
+		energyLevel += Math.round(caloriesGained/15.0);
+	}
+	
 	/**
 	 * Name: toString
 	 * Description: returns all the attributes of the human in a string
 	 * @return - one string value that contains all the attributes and their current values
 	 */
 	public String toString() {
-		return "Name: " + name + "\nGender: " + gender + "\nWeight: " + weight + "\nEnergy Level: " + energyLevel + "\nHeight: " + height;
+		return "Name: " + name + "\nWeight: " + weight + "\nEnergy Level: " + energyLevel;
 	}
 }
+
